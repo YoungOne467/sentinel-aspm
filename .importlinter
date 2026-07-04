@@ -1,0 +1,52 @@
+[importlinter]
+root_package = packages
+
+[importlinter:contract:1]
+name = Enforce Bounded Context Dependencies
+type = contract
+contract_type = independence
+modules =
+    packages.audit
+    packages.security
+    packages.plugin_sdk
+    packages.execution
+    packages.ai_governance
+
+[importlinter:contract:2]
+name = Audit Layer Must Remain Dependency-Free
+type = contract
+contract_type = forbidden
+source_modules =
+    packages.audit
+forbidden_modules =
+    packages.security
+    packages.execution
+    packages.plugin_sdk
+    packages.ai_governance
+
+[importlinter:contract:3]
+name = Execution cannot import concrete Secret Providers
+type = contract
+contract_type = forbidden
+source_modules =
+    packages.execution
+forbidden_modules =
+    packages.security.providers
+
+[importlinter:contract:4]
+name = Plugin SDK cannot import Execution
+type = contract
+contract_type = forbidden
+source_modules =
+    packages.plugin_sdk
+forbidden_modules =
+    packages.execution
+
+[importlinter:contract:5]
+name = AI Governance cannot import Execution
+type = contract
+contract_type = forbidden
+source_modules =
+    packages.ai_governance
+forbidden_modules =
+    packages.execution

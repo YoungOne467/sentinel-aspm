@@ -1,0 +1,320 @@
+@import "@fontsource-variable/geist";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Google Fonts (loaded via index.html) ─── */
+
+:root {
+	--bg-primary: #09090b; /* zinc-950 */
+	--bg-secondary: #000000;
+	--bg-card: rgba(24, 24, 27, 0.6); /* zinc-900 with opacity */
+	--bg-card-hover: rgba(39, 39, 42, 0.8); /* zinc-800 with opacity */
+	--border: rgba(255, 255, 255, 0.08);
+	--text-primary: #f8fafc;
+	--text-secondary: #a1a1aa; /* zinc-400 */
+	--accent-cyan: #a855f7; /* Now mapped to purple/fuchsia */
+	--accent-purple: #d946ef;
+	--accent-green: #10b981;
+	--accent-red: #e11d48;
+	--accent-yellow: #eab308;
+	--accent-orange: #f97316;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: "Geist Variable", "Segoe UI", system-ui, -apple-system, sans-serif;
+	background: var(--bg-primary);
+	color: var(--text-primary);
+	min-height: 100vh;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar {
+	width: 5px;
+	height: 5px;
+}
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+::-webkit-scrollbar-thumb {
+	background: #2a3050;
+	border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+	background: #3a4060;
+}
+
+/* ─── Animations ─── */
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(6px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+@keyframes pulseDot {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.3;
+	}
+}
+@keyframes shimmer {
+	0% {
+		background-position: -200% 0;
+	}
+	100% {
+		background-position: 200% 0;
+	}
+}
+
+.animate-fade-in {
+	animation: fadeIn 0.25s ease-out;
+}
+.animate-pulse-dot {
+	animation: pulseDot 2s ease-in-out infinite;
+}
+
+/* ─── Terminal ─── */
+.terminal-font {
+	font-family:
+		"JetBrains Mono", "Fira Code", "Cascadia Code", "Consolas", monospace;
+	font-size: 12.5px;
+	line-height: 1.65;
+}
+
+/* ─── Glow effects ─── */
+.glow-cyan {
+	box-shadow:
+		0 0 20px rgba(168, 85, 247, 0.12),
+		0 0 40px rgba(168, 85, 247, 0.06);
+}
+.glow-red {
+	box-shadow: 0 0 20px rgba(225, 29, 72, 0.15);
+}
+
+/* ─── Glass card ─── */
+.glass-card {
+	background: var(--bg-card);
+	backdrop-filter: blur(16px);
+	-webkit-backdrop-filter: blur(16px);
+	border: 1px solid var(--border);
+	border-radius: 16px;
+	box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.4);
+}
+
+/* ─── Floating Layout Utilities ─── */
+.floating-panel {
+	background: rgba(9, 9, 11, 0.7);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	border: 1px solid var(--border);
+	border-radius: 16px;
+	box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+/* ─── Focus rings ─── */
+input:focus,
+select:focus,
+textarea:focus {
+	outline: none;
+	border-color: var(--accent-cyan);
+	box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.15);
+}
+
+@layer base {
+	.theme {
+		--font-heading: var(--font-sans);
+		--font-sans: "Geist Variable", sans-serif;
+	}
+	:root {
+		--background: 222.2 84% 4.9%;
+		--foreground: 210 40% 98%;
+		--card: 222.2 84% 4.9%;
+		--card-foreground: 210 40% 98%;
+		--popover: 222.2 84% 4.9%;
+		--popover-foreground: 210 40% 98%;
+		--primary: 210 40% 98%;
+		--primary-foreground: 222.2 47.4% 11.2%;
+		--secondary: 217.2 32.6% 17.5%;
+		--secondary-foreground: 210 40% 98%;
+		--muted: 217.2 32.6% 17.5%;
+		--muted-foreground: 215 20.2% 65.1%;
+		--accent: 217.2 32.6% 17.5%;
+		--accent-foreground: 210 40% 98%;
+		--destructive: 0 62.8% 30.6%;
+		--destructive-foreground: 210 40% 98%;
+		--border: 217.2 32.6% 17.5%;
+		--input: 217.2 32.6% 17.5%;
+		--ring: 212.7 26.8% 83.9%;
+		--radius: 0.5rem;
+		--chart-1: 220 70% 50%;
+		--chart-2: 160 60% 45%;
+		--chart-3: 30 80% 55%;
+		--chart-4: 280 65% 60%;
+		--chart-5: 340 75% 55%;
+	}
+
+	.dark {
+		--background: 222.2 84% 4.9%;
+		--foreground: 210 40% 98%;
+		--card: 222.2 84% 4.9%;
+		--card-foreground: 210 40% 98%;
+		--popover: 222.2 84% 4.9%;
+		--popover-foreground: 210 40% 98%;
+		--primary: 210 40% 98%;
+		--primary-foreground: 222.2 47.4% 11.2%;
+		--secondary: 217.2 32.6% 17.5%;
+		--secondary-foreground: 210 40% 98%;
+		--muted: 217.2 32.6% 17.5%;
+		--muted-foreground: 215 20.2% 65.1%;
+		--accent: 217.2 32.6% 17.5%;
+		--accent-foreground: 210 40% 98%;
+		--destructive: 0 62.8% 30.6%;
+		--destructive-foreground: 210 40% 98%;
+		--border: 217.2 32.6% 17.5%;
+		--input: 217.2 32.6% 17.5%;
+		--ring: 212.7 26.8% 83.9%;
+		--chart-1: 220 70% 50%;
+		--chart-2: 160 60% 45%;
+		--chart-3: 30 80% 55%;
+		--chart-4: 280 65% 60%;
+		--chart-5: 340 75% 55%;
+	}
+	* {
+		@apply border-border outline-ring/50;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
+	html {
+		@apply font-sans;
+	}
+}
+
+/* ─── Aurora Background ─── */
+.aurora-container {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	z-index: -1;
+	overflow: hidden;
+	background: #050505;
+}
+
+.aurora-blob {
+	position: absolute;
+	filter: blur(120px);
+	opacity: 0.5;
+	border-radius: 50%;
+	animation: float 20s infinite ease-in-out alternate;
+}
+
+.aurora-purple {
+	background: radial-gradient(circle, rgba(167,139,250,0.8) 0%, rgba(167,139,250,0) 70%);
+	width: 800px;
+	height: 800px;
+	top: -20%;
+	left: -10%;
+	animation-delay: 0s;
+}
+
+.aurora-emerald {
+	background: radial-gradient(circle, rgba(52,211,153,0.8) 0%, rgba(52,211,153,0) 70%);
+	width: 700px;
+	height: 700px;
+	bottom: -10%;
+	right: -10%;
+	animation-delay: -5s;
+}
+
+.aurora-blue {
+	background: radial-gradient(circle, rgba(56,189,248,0.8) 0%, rgba(56,189,248,0) 70%);
+	width: 600px;
+	height: 600px;
+	top: 40%;
+	left: 40%;
+	animation-delay: -10s;
+}
+
+@keyframes float {
+	0% {
+		transform: translate(0, 0) scale(1);
+	}
+	100% {
+		transform: translate(50px, 50px) scale(1.1);
+	}
+}
+
+/* ─── Animated Borders ─── */
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.animated-border-container {
+	position: relative;
+	overflow: hidden;
+	border-radius: 0.75rem; /* align with tailwind rounded-xl */
+}
+
+.animated-border-container::before {
+	content: "";
+	position: absolute;
+	inset: -50%;
+	background: conic-gradient(from 0deg, transparent 0 340deg, #38bdf8 360deg);
+	animation: spin 4s linear infinite;
+	z-index: 0;
+}
+
+.animated-border-content {
+	position: relative;
+	background: #0a0a0a;
+	margin: 1px;
+	border-radius: calc(0.75rem - 1px);
+	z-index: 1;
+	height: calc(100% - 2px);
+}
+
+/* ─── Global Scrollbar Standardization ─── */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: #2a3050 transparent;
+}
+
+/* ─── Global Eco Mode Overrides ─── */
+body.eco-mode * {
+	animation-duration: 0s !important;
+	animation-delay: 0s !important;
+	transition-duration: 0s !important;
+	transition: none !important;
+	backdrop-filter: none !important;
+	-webkit-backdrop-filter: none !important;
+}
+
+body.eco-mode .glass-card,
+body.eco-mode .floating-panel {
+	background: rgba(24, 24, 27, 0.96) !important;
+	backdrop-filter: none !important;
+	-webkit-backdrop-filter: none !important;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}

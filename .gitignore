@@ -1,0 +1,77 @@
+# ── Python ────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+*.egg
+.eggs/
+*.whl
+
+# ── Virtual environments ──────────────────────────────────────────────
+backend/venv/
+backend/venv_new/
+venv/
+.venv/
+
+# ── Node / Frontend ──────────────────────────────────────────────────
+node_modules/
+dist/
+.next/
+.nuxt/
+
+# ── Environment / Secrets ────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ── SQLite databases ─────────────────────────────────────────────────
+*.db
+*.db-shm
+*.db-wal
+*.sqlite3
+
+# ── Emergency dump / Scratch ─────────────────────────────────────────
+backend/emergency_dump.json
+emergency_dump.json
+backend/scratch/
+scratch/
+
+# ── Test artifacts ───────────────────────────────────────────────────
+backend/pytest_out.txt
+backend/pytest_temp/
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# ── Logs ─────────────────────────────────────────────────────────────
+*.log
+backend_error.log*
+
+# ── IDE / Editor ─────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── OS files ─────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Developer tool caches ────────────────────────────────────────────
+graphify-out/
+.cursor/
+.fallow/
+.agents/
+.antigravityignore
+
+# ── Internal development notes (not for public) ─────────────────────
+CLAUDE.md
+MEMORY.md
+REBUILD_MAP.md
+ORIGINAL_REQUEST.md
+commit_message.txt
+handover_map.md
+pr_description.md

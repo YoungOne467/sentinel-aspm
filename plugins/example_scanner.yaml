@@ -1,0 +1,31 @@
+# ==============================================================================
+# Declarative Pluggable Scanner Specification Blueprint
+# Drop this file under the plugins/ directory to register a new CLI scanner.
+# ==============================================================================
+
+id: "example_scanner"
+name: "Example Scanner"
+version: "1.0.0"
+description: "A declarative wrapper for CLI-based security validation scans."
+runtime:
+  image: "projectdiscovery/subfinder:latest"
+entrypoint:
+  - "-d"
+  - "{{ target }}"
+  - "-oJ"
+environment:
+  SCANNER_MAX_THREADS: "10"
+rules:
+  - pattern: '\"host\":\"([^\"]+)\"'
+    severity: "info"
+    title: "Subdomain Sub-Asset Discovered"
+    description: "Asset host endpoint resolved successfully: {match}"
+    solution: "Register asset endpoint inside corporate boundary network routing maps."
+  - pattern: '(?i)vulnerable|exploit|leaked'
+    severity: "high"
+    title: "Vulnerability Exposure Detected"
+    description: "Tool output matched critical threat pattern: {match}"
+    solution: "Implement strict WAF filtering rules and patch outdated package configurations immediately."
+capabilities:
+  - network:external
+secrets: []

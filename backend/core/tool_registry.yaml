@@ -1,0 +1,142 @@
+# Tool Registry — declarative mapping of CLI tool configurations.
+# The orchestrator uses this to resolve binary paths, safe arguments, and output formats.
+
+tools:
+  nmap:
+    binary: nmap
+    description: "Network exploration and port scanning"
+    output_format: xml
+    safe_args:
+      - "-sV"          # Version detection
+      - "-sC"          # Default scripts
+      - "-O"           # OS detection
+      - "-Pn"          # Skip host discovery
+      - "-T3"          # Normal timing
+      - "-oX"          # XML output
+      - "--top-ports"
+    blocked_args:
+      - "--script=exploit"
+      - "--script=brute"
+    max_concurrent: 2
+
+  nikto:
+    binary: nikto
+    description: "Web server vulnerability scanner"
+    output_format: json
+    safe_args:
+      - "-h"           # Target host
+      - "-Format"      # Output format
+      - "-o"           # Output file
+      - "-Tuning"
+    blocked_args: []
+    max_concurrent: 1
+
+  ffuf:
+    binary: ffuf
+    description: "Fast web fuzzer for directory/parameter discovery"
+    output_format: json
+    safe_args:
+      - "-u"           # Target URL
+      - "-w"           # Wordlist
+      - "-mc"          # Match codes
+      - "-o"           # Output file
+      - "-of"          # Output format
+      - "-t"           # Threads
+      - "-rate"        # Rate limit
+    blocked_args: []
+    max_concurrent: 2
+
+  arjun:
+    binary: arjun
+    description: "HTTP parameter discovery"
+    output_format: json
+    safe_args:
+      - "-u"           # Target URL
+      - "-oJ"          # JSON output
+      - "-t"           # Threads
+    blocked_args: []
+    max_concurrent: 1
+
+  nuclei:
+    binary: nuclei.exe
+    description: "Template-based vulnerability scanner"
+    output_format: json
+    safe_args:
+      - "-u"           # Target URL
+      - "-t"           # Templates
+      - "-jsonl"       # JSON lines output
+      - "-o"           # Output file
+      - "-rl"          # Rate limit
+      - "-severity"
+    blocked_args: []
+    max_concurrent: 2
+
+  subfinder:
+    binary: subfinder.exe
+    description: "Subdomain discovery"
+    output_format: json
+    safe_args:
+      - "-d"           # Domain
+      - "-oJ"          # JSON output
+      - "-o"           # Output file
+      - "-silent"
+    blocked_args: []
+    max_concurrent: 2
+
+  katana:
+    binary: katana.exe
+    description: "Web crawler and URL indexing tool"
+    output_format: json
+    safe_args:
+      - "-list"
+      - "-ps"
+      - "-jc"
+      - "-oJ"
+      - "-o"
+    blocked_args: []
+    max_concurrent: 1
+
+  naabu:
+    binary: naabu.exe
+    description: "Port scanning tool"
+    output_format: txt
+    safe_args:
+      - "-list"
+      - "-p"
+      - "-c"
+      - "-o"
+    blocked_args: []
+    max_concurrent: 1
+
+  httpx_tool:
+    binary: httpx
+    description: "HTTP probing and technology detection"
+    output_format: json
+    safe_args:
+      - "-l"           # Input list
+      - "-json"        # JSON output
+      - "-o"           # Output file
+      - "-status-code"
+      - "-tech-detect"
+      - "-title"
+    blocked_args: []
+    max_concurrent: 2
+
+  testssl:
+    binary: testssl.sh
+    description: "TLS/SSL configuration testing"
+    output_format: json
+    safe_args:
+      - "--jsonfile"
+      - "--severity"
+      - "-U"           # Vulnerability checks
+    blocked_args: []
+    max_concurrent: 1
+
+# Global settings
+settings:
+  default_timeout: 300       # 5 minutes per job
+  max_global_concurrent: 4   # Total concurrent jobs across all tools
+  output_directory: "./scratch/tool_output"
+  log_retention_days: 30     # Auto-purge logs older than this
+  compress_after_parse: true # Compress stdout after successful parsing

@@ -1,0 +1,361 @@
+[
+	{
+		"id": "openapi-document-exposed",
+		"name": "OpenAPI/Swagger Document Exposed",
+		"severity": "Medium",
+		"paths": [
+			"/openapi.json",
+			"/swagger.json",
+			"/api-docs",
+			"/swagger/v1/swagger.json"
+		],
+		"match": {
+			"status": [200],
+			"body_contains": ["paths"],
+			"headers": { "content-type": "json" }
+		},
+		"description": "The application exposes API inventory metadata that can accelerate endpoint and authorization testing.",
+		"remediation": "Restrict API documentation to trusted users or publish a reduced public schema."
+	},
+	{
+		"id": "spring-actuator-env-exposed",
+		"name": "Spring Actuator Environment Endpoint Exposed",
+		"severity": "High",
+		"paths": ["/actuator/env", "/actuator/configprops"],
+		"match": {
+			"status": [200],
+			"body_contains": ["propertySources"]
+		},
+		"description": "A Spring actuator endpoint appears reachable and may expose environment or configuration data.",
+		"remediation": "Disable sensitive actuator endpoints or require strong administrative authentication."
+	},
+	{
+		"id": "git-config-exposed",
+		"name": "Git Metadata Exposed",
+		"severity": "High",
+		"paths": ["/.git/config"],
+		"match": {
+			"status": [200],
+			"body_contains": ["[core]"]
+		},
+		"description": "Git repository metadata is exposed from the web root.",
+		"remediation": "Remove VCS metadata from deployed artifacts and block dotfile access at the web server."
+	},
+	{
+		"id": "graphql-landing-page-exposed",
+		"name": "GraphQL Console Exposed",
+		"severity": "Medium",
+		"paths": ["/graphql", "/graphiql", "/graphql/console"],
+		"match": {
+			"status": [200],
+			"body_contains": ["GraphQL"]
+		},
+		"description": "A GraphQL endpoint or interactive console is reachable and should be included in schema-aware testing.",
+		"remediation": "Disable public consoles in production and enforce authentication, query complexity limits, and operation allowlists."
+	},
+	{
+		"id": "springboot-actuator-heapdump",
+		"name": "Spring Boot Actuator Heapdump Exposed",
+		"severity": "High",
+		"paths": ["/actuator/heapdump", "/heapdump"],
+		"match": {
+			"status": [200],
+			"headers": { "content-type": "application/octet-stream" }
+		},
+		"description": "Java heap dump file is exposed, allowing extraction of sensitive configuration properties, sessions, or credentials.",
+		"remediation": "Restrict actuator endpoints or disable the heapdump endpoint in spring configuration."
+	},
+	{
+		"id": "springboot-actuator-gateway-routes",
+		"name": "Spring Cloud Gateway Routes Exposed",
+		"severity": "High",
+		"paths": ["/actuator/gateway/routes"],
+		"match": {
+			"status": [200],
+			"body_contains": ["route_id", "uri", "predicates"]
+		},
+		"description": "Spring Cloud Gateway routing rules are exposed, disclosing internal microservice architectures and proxy mapping rules.",
+		"remediation": "Enforce authentication for the actuator endpoints or disable gateway actuators."
+	},
+	{
+		"id": "springboot-actuator-beans",
+		"name": "Spring Boot Actuator Beans Exposed",
+		"severity": "Medium",
+		"paths": ["/actuator/beans", "/beans"],
+		"match": {
+			"status": [200],
+			"body_contains": ["beans", "dependencies", "scope"]
+		},
+		"description": "Exposed spring bean configuration list, disclosing dependencies, object mappings, and internal application components.",
+		"remediation": "Disable actuator endpoints or secure with strict basic authentication."
+	},
+	{
+		"id": "nextjs-ssr-poisoning",
+		"name": "Next.js SSR Cache Poisoning Vulnerability",
+		"severity": "High",
+		"paths": ["/"],
+		"headers": {
+			"X-Forwarded-Host": "evil-attacker-host.local"
+		},
+		"match": {
+			"status": [200],
+			"body_contains": ["evil-attacker-host.local"]
+		},
+		"description": "The target dynamically reflects host headers in server-side rendered pages, causing potential SSR cache poisoning.",
+		"remediation": "Do not trust user-controlled headers when constructing dynamic URLs. Enforce explicit host header validation."
+	},
+	{
+		"id": "aws-metadata-ssrf-v1",
+		"name": "AWS EC2 Metadata Service SSRF Exposure (IMDSv1)",
+		"severity": "Critical",
+		"paths": ["/latest/meta-data/", "/latest/meta-data/iam/security-credentials/"],
+		"headers": {
+			"X-Forwarded-For": "169.254.169.254"
+		},
+		"match": {
+			"status": [200],
+			"body_contains": ["ami-id", "iam", "instance-id"]
+		},
+		"description": "The application reflects internal cloud metadata endpoint responses, exposing sensitive AWS IAM instance credentials.",
+		"remediation": "Enforce AWS IMDSv2 (require token), block outgoing requests to 169.254.169.254, or enforce request validation."
+	},
+	{
+		"id": "aws-metadata-ssrf-v2",
+		"name": "AWS EC2 Metadata Service Token Request Exposure (IMDSv2)",
+		"severity": "Critical",
+		"paths": ["/latest/api/token"],
+		"headers": {
+			"X-aws-ec2-metadata-token-ttl-seconds": "21600"
+		},
+		"match": {
+			"status": [200],
+			"body_contains": ["aws"]
+		},
+		"description": "The endpoint exposes AWS EC2 IMDSv2 token retrieval mechanism, which can be chained to gain administrative access.",
+		"remediation": "Configure security groups to restrict outbound metadata requests or upgrade server-side query filters."
+	},
+	{
+		"id": "graphql-introspection-query",
+		"name": "GraphQL Schema Introspection Enabled",
+		"severity": "Medium",
+		"paths": ["/graphql", "/api/graphql"],
+		"method": "POST",
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"payload": "{\"query\":\"{__schema{queryType{name}}}\"}",
+		"match": {
+			"status": [200],
+			"body_contains": ["__schema", "queryType"]
+		},
+		"description": "GraphQL schema introspection is enabled, revealing all available queries, mutations, fields, and argument types.",
+		"remediation": "Disable introspection in production environments."
+	},
+	{
+		"id": "kubernetes-sa-token",
+		"name": "Kubernetes Service Account Token Leaked",
+		"severity": "Critical",
+		"paths": ["/run/secrets/kubernetes.io/serviceaccount/token", "/.secrets/k8s-token"],
+		"match": {
+			"status": [200],
+			"body_contains": ["eyJhY2Nlc3NfdG9rZW4i", "eyJhbGciOiJSUzI1NiJ9"]
+		},
+		"description": "Kubernetes service account credentials token file is exposed, potentially granting root container/cluster permissions.",
+		"remediation": "Restrict mounting of default service account tokens or block paths at reverse proxies."
+	},
+	{
+		"id": "docker-registry-api",
+		"name": "Docker Private Registry Catalog Exposed",
+		"severity": "High",
+		"paths": ["/v2/_catalog"],
+		"match": {
+			"status": [200],
+			"body_contains": ["repositories"]
+		},
+		"description": "Docker Registry HTTP API v2 catalog is publicly accessible, disclosing custom application container repositories.",
+		"remediation": "Enforce strong token-based authentication on the Docker Registry API."
+	},
+	{
+		"id": "prometheus-metrics-exposed",
+		"name": "Prometheus Metrics Endpoint Exposed",
+		"severity": "Medium",
+		"paths": ["/metrics", "/actuator/prometheus"],
+		"match": {
+			"status": [200],
+			"body_contains": ["http_requests_total", "jvm_memory_used_bytes"]
+		},
+		"description": "Application metrics containing connection counts, performance indicators, and internal configurations are exposed.",
+		"remediation": "Block access to the /metrics endpoint or limit metrics scraping to trusted internal subnets."
+	},
+	{
+		"id": "consul-agent-self",
+		"name": "HashiCorp Consul Agent Configuration Exposed",
+		"severity": "High",
+		"paths": ["/v1/agent/self"],
+		"match": {
+			"status": [200],
+			"body_contains": ["Config", "Member", "DebugConfig"]
+		},
+		"description": "Consul service mesh configuration is exposed, disclosing node parameters, local checks, and coordination secrets.",
+		"remediation": "Enforce ACL policies on Consul API endpoint, or restrict HTTP bindings to localhost."
+	},
+	{
+		"id": "hashicorp-vault-health",
+		"name": "HashiCorp Vault System Health Exposed",
+		"severity": "Low",
+		"paths": ["/v1/sys/health"],
+		"match": {
+			"status": [200],
+			"body_contains": ["initialized", "sealed", "version"]
+		},
+		"description": "Vault health status and initialization properties are accessible, indicating presence of secret storage systems.",
+		"remediation": "Enforce authorization or block unauthenticated traffic from public interfaces."
+	},
+	{
+		"id": "elasticsearch-nodes-info",
+		"name": "Elasticsearch Nodes Configuration Exposed",
+		"severity": "High",
+		"paths": ["/_nodes", "/_cat/indices"],
+		"match": {
+			"status": [200],
+			"body_contains": ["nodes", "cluster_name", "indices"]
+		},
+		"description": "Elasticsearch cluster nodes configuration or index information is exposed, leading to database schema disclosure.",
+		"remediation": "Bind Elasticsearch to localhost, enable authentication (x-pack), and restrict public API access."
+	},
+	{
+		"id": "redis-http-rce",
+		"name": "Redis REST API or HTTP Pipeline Port Exposure",
+		"severity": "High",
+		"paths": ["/info"],
+		"match": {
+			"status": [200],
+			"body_contains": ["redis_version", "uptime_in_seconds"]
+		},
+		"description": "Redis database interface appears exposed on HTTP endpoint, potentially allowing data exfiltration or Command Injection.",
+		"remediation": "Disable HTTP parser support in redis config or block public access to the Redis port."
+	},
+	{
+		"id": "jenkins-script-console",
+		"name": "Jenkins Administration Script Console Exposed",
+		"severity": "Critical",
+		"paths": ["/script", "/jenkins/script"],
+		"match": {
+			"status": [200],
+			"body_contains": ["Groovy script", "Jenkins.instance"]
+		},
+		"description": "Unauthenticated access to the Jenkins Groovy Script Console permits Remote Code Execution (RCE) on the server.",
+		"remediation": "Enable global security settings, enforce authentication, and restrict access to admin consoles."
+	},
+	{
+		"id": "phpmyadmin-setup",
+		"name": "phpMyAdmin Installation Setup Exposed",
+		"severity": "High",
+		"paths": ["/phpmyadmin/setup/config.php", "/setup/config.php"],
+		"match": {
+			"status": [200],
+			"body_contains": ["phpMyAdmin", "configuration"]
+		},
+		"description": "The setup configuration interface for phpMyAdmin is exposed, permitting configuration alteration or credential disclosure.",
+		"remediation": "Delete the setup directory or secure it with strict IP constraints."
+	},
+	{
+		"id": "laravel-env-leak",
+		"name": "Laravel Environment Configuration Leakage",
+		"severity": "High",
+		"paths": ["/.env", "/config/database.php"],
+		"match": {
+			"status": [200],
+			"body_contains": ["APP_ENV", "DB_PASSWORD", "APP_KEY"]
+		},
+		"description": "Laravel environment configuration credentials file is accessible, exposing databases, API keys, and app encryption keys.",
+		"remediation": "Block access to dotfiles (.*) at the web server level and move the environment file outside the public root."
+	},
+	{
+		"id": "node-red-dashboard",
+		"name": "Node-RED Dashboard Console Exposed",
+		"severity": "High",
+		"paths": ["/red/", "/admin/"],
+		"match": {
+			"status": [200],
+			"body_contains": ["node-red", "RED.settings"]
+		},
+		"description": "Node-RED programming console is exposed, letting unauthorized visitors inject flow logic or run server scripts.",
+		"remediation": "Configure adminAuth inside Node-RED settings.js configuration file."
+	},
+	{
+		"id": "apache-solr-admin",
+		"name": "Apache Solr Administration Exposed",
+		"severity": "High",
+		"paths": ["/solr/admin/cores", "/solr/#/"],
+		"match": {
+			"status": [200],
+			"body_contains": ["responseHeader", "status", "initArgs"]
+		},
+		"description": "Apache Solr admin console is publicly exposed, leaving cores vulnerable to unauthorized data queries and deletes.",
+		"remediation": "Secure Solr Admin page using basic authentication or implement strict network level restrictions."
+	},
+	{
+		"id": "git-index-exposed",
+		"name": "Git Repository Index File Exposed",
+		"severity": "Medium",
+		"paths": ["/.git/index"],
+		"match": {
+			"status": [200],
+			"headers": { "content-type": "application/octet-stream" }
+		},
+		"description": "Git repository index metadata file is exposed, enabling reconstructing repository structure and file names.",
+		"remediation": "Block access to the /.git folder at the reverse proxy/web server configuration level."
+	},
+	{
+		"id": "phpinfo-exposure",
+		"name": "PHP Information Page Exposed",
+		"severity": "Medium",
+		"paths": ["/phpinfo.php", "/info.php", "/test.php"],
+		"match": {
+			"status": [200],
+			"body_contains": ["PHP Logo", "phpinfo()", "System"]
+		},
+		"description": "Exposed PHP environment details, disclosing extensions, server environment values, and absolute filesystem paths.",
+		"remediation": "Delete information disclosure test files or disable public accessibility."
+	},
+	{
+		"id": "config-json-exposure",
+		"name": "Application Configuration File Leakage",
+		"severity": "Medium",
+		"paths": ["/config.json", "/config/config.json"],
+		"match": {
+			"status": [200],
+			"body_contains": ["database", "api", "port"]
+		},
+		"description": "Exposed JSON application configuration, potentially containing configuration details or internal access variables.",
+		"remediation": "Remove sensitive variables from the exposed config or secure endpoint behind active authentication."
+	},
+	{
+		"id": "docker-compose-exposure",
+		"name": "Docker Compose Manifest Exposed",
+		"severity": "High",
+		"paths": ["/docker-compose.yml", "/docker-compose.yaml"],
+		"match": {
+			"status": [200],
+			"body_contains": ["version:", "services:", "image:"]
+		},
+		"description": "Exposed Docker Compose configuration, exposing local images, container port mappings, and environment setups.",
+		"remediation": "Exclude configuration blueprints and manifest templates from web server folder directories."
+	},
+	{
+		"id": "nextjs-api-preview",
+		"name": "Next.js Preview Bypass Access Configuration",
+		"severity": "Medium",
+		"paths": ["/api/preview"],
+		"headers": {
+			"X-Forwarded-For": "127.0.0.1"
+		},
+		"match": {
+			"status": [200],
+			"body_contains": ["preview"]
+		},
+		"description": "Next.js draft content preview endpoint configuration error allows unauthorized request proxy bypass.",
+		"remediation": "Enforce strict verification of dynamic credentials and restrict access to dev preview handlers."
+	}
+]

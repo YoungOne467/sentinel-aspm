@@ -1,0 +1,54 @@
+{
+	"tomcat": [
+		{
+			"cve_id": "CVE-2020-1938",
+			"severity": "critical",
+			"cvss": 9.8,
+			"description": "Apache Tomcat AJP File Read/Inclusion (Ghostcat)",
+			"affected_versions": ["9.0"]
+		},
+		{
+			"cve_id": "CVE-2022-22965",
+			"severity": "critical",
+			"cvss": 9.8,
+			"description": "Spring Framework RCE via Tomcat classloader (Spring4Shell)",
+			"affected_versions": ["9.0"]
+		}
+	],
+	"apache": [
+		{
+			"cve_id": "CVE-2021-41773",
+			"severity": "critical",
+			"cvss": 9.8,
+			"description": "Apache HTTP Server 2.4.49 path traversal and RCE",
+			"affected_versions": ["2.4"]
+		}
+	],
+	"php": [
+		{
+			"cve_id": "CVE-2024-4577",
+			"severity": "critical",
+			"cvss": 9.8,
+			"description": "PHP-CGI Windows Argument Injection vulnerability",
+			"affected_versions": ["8.0", "8.1", "8.2", "8.3"]
+		}
+	],
+	"react": [
+		{
+			"cve_id": "CVE-2021-3000",
+			"severity": "medium",
+			"cvss": 5.4,
+			"description": "XSS in React component serialization",
+			"affected_versions": ["16.0", "15.0"]
+		}
+	],
+	"nginx": [
+		{
+			"cve_id": "CVE-2022-41741",
+			"severity": "high",
+			"cvss": 7.5,
+			"description": "Nginx security vulnerability in mp4 module",
+			"affected_versions": ["1.23"]
+		}
+	]
+}
